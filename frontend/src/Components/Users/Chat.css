@@ -1,0 +1,36 @@
+.chatarea-container{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.chat-header{
+    background-color: orange;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.chat-area{
+    background-color: white;
+    padding: 10px 10px;
+    margin: 10px;
+    border-radius: 20px;
+    height: 400px;
+    width: 100%;
+}
+
+.chat-input{
+    background-color: white;
+    padding: 10px 10px;
+    margin: 10px;
+    border-radius: 20px;
+}
+
+.search-box{
+    outline-width: 0;
+    border: none;
+    margin-left: 10px;
+    font-size: 1.25rem;
+}

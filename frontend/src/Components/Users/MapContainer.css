@@ -1,0 +1,45 @@
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 550px;
+}
+
+.search-container {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    z-index: 1; /* Ensure the search box appears above the map */
+    width: 100px; 
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: beige;
+}
+
+.calculate{
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 450px; /* Adjust as needed */
+    z-index: 2; /* Ensure the button appears above the search container */
+}
+
+.get-current-location {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 250px; /* Adjust as needed */
+    z-index: 2; /* Ensure the button appears above the search container */
+  }
+
+/* .sidebar {
+    background-color: rgb(35 55 75 / 90%);
+    color: #fff;
+    padding: 6px 12px;
+    font-family: monospace;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 12px;
+    border-radius: 4px;
+} */
