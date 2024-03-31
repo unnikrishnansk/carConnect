@@ -14,8 +14,7 @@
 Welcome to carConnect, a full fledged cab-booking website. This repository contains the source code for carConnect website, built using React, Redux, Javascript, Nodejs and MongoDB.
 
 # Tech Stacks
-Client :- React, CSS, JavaScript, Bootstrap, Redux
-Server :- Nodejs, Expressjs, MongoDB
+React, CSS, JavaScript, Bootstrap, Redux, Nodejs, Expressjs, MongoDB, JWT, Socket.io
 
 # Features
 
@@ -37,6 +36,8 @@ Server :- Nodejs, Expressjs, MongoDB
 ![image](https://github.com/unnikrishnansk/carConnect/assets/97491531/322f1125-df95-454b-a314-bcd2983d57b4)
 ![image](https://github.com/unnikrishnansk/carConnect/assets/97491531/26af64f4-5147-477c-b4d2-2ad8665041fa)
 ![image](https://github.com/unnikrishnansk/carConnect/assets/97491531/bb4f231e-99b7-4e69-bac4-91e20d75e11e)
+![image](https://github.com/unnikrishnansk/carConnect/assets/97491531/50336cdf-9f38-4011-b0cf-75bd2352df15)
+
 
 
 
