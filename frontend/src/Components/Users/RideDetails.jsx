@@ -14,6 +14,7 @@ const RideDetails = () => {
 
     const mapContainerRef = useRef(null);
     const [mapInitialized, setMapInitialized] = useState(false);
+    const [currdriver,setCurrdriver] = useState(0.01);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,8 +23,12 @@ const RideDetails = () => {
     const { userInfo } = useSelector((state)=>state.auth);
     const { startplaceCord } = useSelector((state)=>state.place);
     const { destplaceCord } = useSelector((state)=>state.place);
+    const { SuggestionInfo } = useSelector((state)=>state.suggestion);
+    console.log(SuggestionInfo);
     const rideUser = userInfo?.name;
     const [getRideDetails, {isError, refetch}] = useGetRideDetailMutation();
+
+    
 
     useEffect(() => {
         const getRides = async () => {
@@ -35,107 +40,99 @@ const RideDetails = () => {
         getRides();
     }, [])
 
-   useEffect(() => {
+    console.log(rideHistory);
 
-    if (!mapContainerRef.current) return;
+    useEffect(() => {
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoidW5uaWtyaXNobmFuODA3NSIsImEiOiJjbHRpZTlmcXAwYWpkMmtxd2JwOXJveXAyIn0.IOfM5FIc6EnW86dMN3-DyA';
-
-    const mapboxToken = 'pk.eyJ1IjoidW5uaWtyaXNobmFuODA3NSIsImEiOiJjbHRpZTlmcXAwYWpkMmtxd2JwOXJveXAyIn0.IOfM5FIc6EnW86dMN3-DyA';
-
-    console.log(startplaceCord[0],startplaceCord[1]);
-
-    const map = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [startplaceCord[0], startplaceCord[1]], // Source location
-        zoom: 12,
+      if (!mapContainerRef.current) return;
+  
+      mapboxgl.accessToken = 'pk.eyJ1IjoidW5uaWtyaXNobmFuODA3NSIsImEiOiJjbHRpZTlmcXAwYWpkMmtxd2JwOXJveXAyIn0.IOfM5FIc6EnW86dMN3-DyA';
+  
+      const mapboxToken = 'pk.eyJ1IjoidW5uaWtyaXNobmFuODA3NSIsImEiOiJjbHRpZTlmcXAwYWpkMmtxd2JwOXJveXAyIn0.IOfM5FIc6EnW86dMN3-DyA';
+  
+      console.log(startplaceCord[0],startplaceCord[1]);
+  
+      const map = new mapboxgl.Map({
+          container: mapContainerRef.current,
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [startplaceCord[0], startplaceCord[1]], // Source location
+          zoom: 10,
+      });
+  
+      map.on('load', () => {
+        setMapInitialized(true);
     });
-
-    map.on('load', () => {
-      setMapInitialized(true);
-  });
-
-    // const directions = new mapboxgl.Directions({
-    //     accessToken: mapboxgl.accessToken,
-    //     unit: 'metric',
-    //     profile: 'mapbox/driving',
-    //     controls: { instructions: true },
-    // });
-
-    // map.addControl(directions, 'top-left');
-
-    // // Set source and destination
-    // directions.setOrigin(startplaceCord);
-    // directions.setDestination(destplaceCord);
-
-    if (mapInitialized) {
-      fetchRoute(startplaceCord, destplaceCord, mapboxToken)
-          .then(route => {
-              drawRoute(route, map);
-          })
-          .catch(error => {
-              console.error('Error fetching route:', error);
-          });
-  }
-
-    return () => map.remove();
-}, [startplaceCord, destplaceCord, mapInitialized]);
-
-const fetchRoute = async (start, end, token) => {
-  console.log("start",start,"end",end,"token",token);
-  const response = await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${start[0]+0.01},${start[1]+0.01}?geometries=geojson&steps=true&access_token=${token}`);
-  const data = await response.json();
-  return data.routes[0];
-};
-
-const drawRoute = (route, map) => {
-
-  console.log("Route:", route);
-  console.log("map",map);
-  if (!route || !route.geometry) {
-    console.error('Route or geometry is undefined');
-    return;
-  }
-
-  // Add pointer for starting point
-  new mapboxgl.Marker()
-  .setLngLat(startplaceCord)
-  .addTo(map);
-
-// Add pointer for ending point
-new mapboxgl.Marker()
-  .setLngLat(destplaceCord)
-  .addTo(map);
-
-  const coordinates = route.geometry.coordinates;
-  console.log(coordinates);
-  map.addLayer({
-    id: 'route',
-    type: 'line',
-    source: {
-      type: 'geojson',
-      data: {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: coordinates
-        }
-      }
-    },
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': '#3887be',
-      'line-width': 5,
-      'line-opacity': 0.75
+  
+  
+      if (mapInitialized) {
+        fetchRoute(startplaceCord, destplaceCord, mapboxToken, currdriver)
+            .then(route => {
+                drawRoute(route, map);
+            })
+            .catch(error => {
+                console.error('Error fetching route:', error);
+            });
     }
-  });
-
-};
+  
+      return () => map.remove();
+  }, [startplaceCord, destplaceCord, mapInitialized, currdriver]);
+  
+  const fetchRoute = async (start, end, token, currdriver) => {
+    console.log("start",start,"end",end,"token",token);
+    const response = await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]+currdriver},${start[1]+currdriver};${start[0]},${start[1]}?geometries=geojson&steps=true&access_token=${token}`);
+    const data = await response.json();
+    return data.routes[0];
+  };
+  
+  const drawRoute = (route, map) => {
+  
+    console.log("Route:", route);
+    console.log("map",map);
+    if (!route || !route.geometry) {
+      console.error('Route or geometry is undefined');
+      return;
+    }
+  
+    // Add pointer for starting point
+    new mapboxgl.Marker({color: 'green'})
+    .setLngLat(startplaceCord)
+    .addTo(map);
+  
+  // Add pointer for ending point
+  new mapboxgl.Marker()
+    .setLngLat(destplaceCord)
+    .addTo(map);
+  
+    const coordinates = route.geometry.coordinates;
+    console.log(coordinates);
+    map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: coordinates
+          }
+        }
+      },
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': '#3887be',
+        'line-width': 5,
+        'line-opacity': 0.75
+      }
+    });
+  
+  };
+  
+  
 
     console.log(rideHistory);
 
@@ -151,9 +148,9 @@ new mapboxgl.Marker()
       return formattedTime;
   };
 
-  // const handleTrack = () => {
-  //   navigate('/trackdriver');
-  // }
+  const handleChat = () => {
+    navigate('/chat');
+  }
 
   return (
     <>
@@ -166,8 +163,11 @@ new mapboxgl.Marker()
                 <div key={ride.id} className='ride-details border-dark'>
                      {ride.isAccepted===false && ride.isRejected===false && ride.isCompleted===false && <p className='fw-bold text-warning '>Waiting for Driver confirmation!!.. Confirm OTP :- {ride.rideOtp}</p>}
                      {ride.isAccepted===false && ride.isRejected===true && ride.isCompleted===false && <p className='fw-bold text-danger '>Driver rejected Ride!.. The amount deducted will be credited back..</p>}
-                     {ride.isAccepted===true && ride.isRejected===false && ride.isCompleted===false && <><p className='fw-bold text-primary '>Driver on the way!.. Confirm OTP :- {ride.rideOtp}</p>
-                     <div ref={mapContainerRef} style={{ width: '75%', height: '300px' }} />
+                     {ride.isAccepted===true && ride.isRejected===false && ride.isCompleted===false && <>
+                     <p>{SuggestionInfo}</p>
+                      <div ref={mapContainerRef} style={{ width: '75%', height: '300px' }} /><p className='fw-bold text-primary '>Driver on the way!.. Confirm OTP :- {ride.rideOtp}</p>
+                     <button onClick={handleChat} className='btn btn-primary btn-md'>Chat with driver</button>
+                     
                      {/* <button className='btn btn-primary btn-md' onClick={handleTrack}>Track</button> */}
                      </>}
                      {ride.isAccepted===true && ride.isRejected===false && ride.isCompleted===true && <>
@@ -184,8 +184,11 @@ new mapboxgl.Marker()
                     {/* Add more details as needed */}
                 </div>
             ))}
+
+           
        
         <div className="btns p-2">
+
           {/* <button className='btn btn-primary btn-md'>Details</button> */}
           {/* <button className='btn btn-primary btn-md ml-2'>Subscribe</button> */}
         </div>

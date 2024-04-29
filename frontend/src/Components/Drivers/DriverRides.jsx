@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import DriverNavbar from './DriverNavbar';
 import DriverSidebar from './DriverSidebar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useAcceptRideMutation, useGetDriverRideDetailMutation, usePaymentReceivedMutation, useReachedRideMutation } from '../../Slices/driverApiSlice';
 import { Link } from 'react-router-dom';
+import { setSuggestionCredentials } from '../../Slices/SuggestionSlice';
+import { setRideCredentials } from '../../Slices/rideSlice';
 
 const DriverRides = () => {
 
@@ -12,10 +14,13 @@ const DriverRides = () => {
     const [showReachedButton, setShowReachedButton] = useState(false);
     const [confirmButtonDisabled, setConfirmButtonDisabled] = useState(false);
     const [isButtonVisible, setButtonVisible] = useState(true);
+    const [suggestion, setSuggestion] = useState(null);
 
     const { driverInfo } = useSelector((state)=>state.driver);
     const rideDriver = driverInfo.name;
     console.log(rideDriver);
+
+    const dispatch = useDispatch();
 
     const [getDriverRideDetails, {isError}] = useGetDriverRideDetailMutation();
     const [acceptRide, {isLoading:isAccepting, refetch}] = useAcceptRideMutation();
@@ -37,7 +42,10 @@ const DriverRides = () => {
     const handleConfirm = async (id) => {
       try {
         console.log(id);
+        console.log(suggestion);
+        dispatch(setSuggestionCredentials(suggestion));
         const res = await acceptRide(id).unwrap();
+        dispatch(setRideCredentials(res));
         console.log(res);
         toast.success(res.message);
         refetchRides();
@@ -81,6 +89,7 @@ const confirmOtp = (e,id) => {
   const foundRide = rideHistory.find(ride => ride.id === id);
   if(foundRide.rideOtp !== checkotp){
     toast.error("Otp doesnot match");
+    // checkotp("");
     return;
   }else{
     setShowReachedButton(true);
@@ -99,6 +108,10 @@ const handleCashReceived = async (id) => {
   refetchRides();
 }
 
+// const handleSuggestion = () => {
+//   console.log(suggestion);
+// }
+
 
   return (
     <>
@@ -109,7 +122,9 @@ const handleCashReceived = async (id) => {
       <div className="box border border-3 border-dark rounded m-3 text-dark" >
       {rideHistory && rideHistory.map(ride => (
                 <div key={ride.id} className='ride-details border-dark'>
-                     {ride.isAccepted===false && ride.isRejected===false && ride.isCompleted===false && <p className='fw-bold text-warning'>You have a ride waiting!..</p>}
+                     {ride.isAccepted===false && ride.isRejected===false && ride.isCompleted===false && <><p className='fw-bold text-warning'>You have a ride waiting!..</p>
+                     <input onChange={(e)=>setSuggestion(e.target.value)} name='suggestion' id='suggestion' className='w-100' style={{height:'35px',fontSize:'16px'}} type='text' placeholder='If you have any suggestion for the customer before accepting or rejecting provide here...'/>
+                     </>}
                      {ride.isAccepted===false && ride.isRejected===true && ride.isCompleted===false && <p className='fw-bold text-danger'>You have Rejected this ride!..</p>}
                      {ride.isAccepted===true && ride.isRejected===false && ride.isCompleted===false && <p className='fw-bold text-primary '>Customer safety is in your hand!.. Confirm OTP :- <input type="number" required /> {!confirmButtonDisabled  && <button onClick={(e)=>confirmOtp(e,ride.id)} className='btn btn-primary btn-md'>Confirm</button>}</p>}
                      {ride.isAccepted===true && ride.isRejected===false && ride.isCompleted===true && 

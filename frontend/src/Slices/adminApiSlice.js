@@ -98,8 +98,14 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         url: `${ADMIN_URL}/adminridedetails`,
         method: 'GET',
       }),
+     }),
+     getAdminhome: builder.query({
+      query: () => ({
+        url: `${ADMIN_URL}/adminhome`,
+        method: 'GET',
+      }),
   }),
     })
 })
 
-export const {useAdminloginMutation, useAdminlogoutMutation, useGetUsersQuery, useGetDriversQuery, useBlockUsersMutation, useGetVehiclesQuery, useAddVehicleMutation, useGetVehicleQuery, useEditVehicleMutation, useDeleteVehicleMutation, useGetVehicleImageMutation, useGetDriverApprovalMutation, useApproveDriverMutation, useDeclineDriverMutation, useGetAllRideDetailQuery } = adminApiSlice;
+export const {useAdminloginMutation, useAdminlogoutMutation, useGetUsersQuery, useGetDriversQuery, useBlockUsersMutation, useGetVehiclesQuery, useAddVehicleMutation, useGetVehicleQuery, useEditVehicleMutation, useDeleteVehicleMutation, useGetVehicleImageMutation, useGetDriverApprovalMutation, useApproveDriverMutation, useDeclineDriverMutation, useGetAllRideDetailQuery, useGetAdminhomeQuery } = adminApiSlice;

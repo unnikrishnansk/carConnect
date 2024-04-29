@@ -1,0 +1,10 @@
+.sent-message{
+    color: blue;
+    text-align: end;
+    margin-right: 50px;
+}
+
+.received-message{
+    color: red;
+    margin-left: 50px;
+}

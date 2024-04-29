@@ -50,19 +50,6 @@ const DriverMap = () => {
         setMapInitialized(true);
     });
   
-      // const directions = new mapboxgl.Directions({
-      //     accessToken: mapboxgl.accessToken,
-      //     unit: 'metric',
-      //     profile: 'mapbox/driving',
-      //     controls: { instructions: true },
-      // });
-  
-      // map.addControl(directions, 'top-left');
-  
-      // // Set source and destination
-      // directions.setOrigin(startplaceCord);
-      // directions.setDestination(destplaceCord);
-  
       if (mapInitialized) {
         fetchRoute(startplaceCord, destplaceCord, mapboxToken)
             .then(route => {
@@ -91,9 +78,12 @@ const DriverMap = () => {
       console.error('Route or geometry is undefined');
       return;
     }
-  
+    
+    const el = document.createElement('div');
+    el.className = 'marker';  
+  console.log(el);
     // Add pointer for starting point
-    new mapboxgl.Marker()
+    new mapboxgl.Marker({color: 'green'})
     .setLngLat(startplaceCord)
     .addTo(map);
   
@@ -131,48 +121,7 @@ const DriverMap = () => {
   
   };
   
-      // useEffect(() => {
-      //     const ListVehicle = async () =>{
-      //         const res = await vehiclelist({startplaceInfo,destplaceInfo}).unwrap();
-      //         setVehiclelists(res.vehicles);
-      //     }
-  
-      //     ListVehicle();
-      // }, [vehiclelist])
-  
-      // console.log(vehiclelists);
-  
-      // const handleBookRide = (vehicleData) => {
-      //   console.log(vehicleData);
-      //   dispatch(setAvailableVehicleCredentials(vehicleData));
-      //   navigate('/payment');
-      // }
-  
-      
-      // const filterData = (searchText,vehiclefilter) => {
-      //   const filterData = vehiclefilter.filter((vehicle) =>
-      //   vehicle?.type?.toLowerCase().includes(searchText.toLowerCase())
-      // );
-      // return filterData;
-      // }
-  
-      // const handleCarType = (typeCar) => {
-      //   if(typeCar==="Mini"){
-      //     console.log("car type is mini");
-      //     dispatch(setCarType(typeCar));
-      //     navigate('/payment');
-      //   }
-      //   else if(typeCar==="Sedan"){
-      //     console.log("car type is sedan");
-      //     dispatch(setCarType(typeCar));
-      //     navigate('/payment');
-      //   }
-      //   else{
-      //     console.log("car type is suv");
-      //     dispatch(setCarType(typeCar));
-      //     navigate('/payment');
-      //   }
-      // }
+    
 
   return (
     <>

@@ -5,6 +5,7 @@ import driverReducer from './Slices/driverSlice.js';
 import adminReducer from './Slices/adminSlice.js';
 import vehicleReducer from './Slices/vehicleSlice.js';
 import placeReducer from './Slices/placeSlice.js';
+import suggestionReducer from './Slices/SuggestionSlice.js';
 import availablevehiclesReducer from './Slices/SelectedVehicle.js';
 import rideReducer from './Slices/rideSlice.js';
 
@@ -17,6 +18,7 @@ const store = configureStore({
     place: placeReducer,
     availablevehicles: availablevehiclesReducer,
     ride: rideReducer,
+    suggestion: suggestionReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

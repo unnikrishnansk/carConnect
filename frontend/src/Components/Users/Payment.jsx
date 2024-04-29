@@ -31,7 +31,7 @@ const Payment = () => {
   const { userInfo } = useSelector((state)=>state.auth);
   console.log(userInfo.name);
   const { availableVehicles } = useSelector((state)=>state.availablevehicles);
-  console.log(availableVehicles);
+  // console.log(availableVehicles?.vehicles);
 
   const { startplaceInfo } = useSelector((state)=>state.place);
   const { destplaceInfo } = useSelector((state)=>state.place);
@@ -77,7 +77,7 @@ const Payment = () => {
     }
     const data = {
       rideUser : userInfo?.name,
-      rideDriver: availableVehicles?.driver[0]?.name,
+      // rideDriver: availableVehicles?.driver[0]?.name,
       rideFrom: startplaceInfo,
       rideTo: destplaceInfo,
       rideAmount: estimatedfare,
@@ -116,27 +116,20 @@ const Payment = () => {
             return;
         }
 
-        // const { amount, id: order_id, currency } = result.data;
-
         const options = {
             key: "rzp_test_0FzeJlcAe5blcS", // Enter the Key ID generated from the Dashboard
             amount: estimatedfare*100,
             currency: "INR",
             name: "carConnect",
             description: "Test Transaction",
-            // image: { logo },
-            // order_id: order_id,
-            // data,
             handler: async function (response) {
                 const data = {
                   rideUser : userInfo?.name,
-                  // rideDriver: availableVehicles?.driver[0]?.name,
                   rideFrom: startplaceInfo,
                   rideTo: destplaceInfo,
                   rideAmount: estimatedfare,
                   paymentMethod: paymentMethod,
                   rideApproximateTime: duration,
-                    // orderCreationId: order_id,
                     razorpayPaymentId: response.razorpay_payment_id,
                     razorpayOrderId: response.razorpay_order_id,
                     razorpaySignature: response.razorpay_signature,
@@ -190,195 +183,178 @@ const Payment = () => {
     navigate('/paymentsuccess');
     dispatch(setRideCredentials({...res}));
   }
-
-  // dispatch(clearPlaceCredentials());
     
   }
-
-  //  // Simulate data loading
-  //  setTimeout(() => {
-  //   setLoading(false);
-  // }, 5000); // 5000 milliseconds = 5 seconds
 
   return (
   <>
   <Navbar />
 
-  {/* {loading ? (<Loader/>) : ( */}
-     <section className="h-100">
-     <div className="container py-5">
-         <div className="toast-container position-fixed top-0 end-0 p-3">
-         
-         </div>
-   
-         <div className="row align-items-md-start  my-4">
-             <div className="w-100">
-                 <div className="card mb-4 w-100">
-                     <div className="card-header py-3">
-                         <h5 className="mb-0">Summary</h5>
-                     </div>
-                     <div className="card-body">
-                         
-                         <div className="row">
-                             <div className="col-md-3">
-                                 
-                             {/* <div className='h-75 w-100 m-4 d-flex'>
-   
-                               {availableVehicles && availableVehicles?.vehicleURL && availableVehicles?.vehicleURL.map((image, index) => (
-                                 <img
-                                   key={index}
-                                   className='m-3'
-                                   src={`http://localhost:5000/${image}`}
-                                   alt={`Vehicle Image ${index + 1}`}
-                                 />
-                               ))}
+  {availableVehicles?.vehicles?.length === 0 || availableVehicles?.vehicles === null ? (<div className='m-5'><h5>At the moment, we don't have service from your source location</h5><p>As of now our serices are from Trivandrum, Kottarakara and Bengaluru... Sorry for the inconvinience...</p></div>) : (
+    <section className="h-100">
+    <div className="container py-5">
+        <div className="toast-container position-fixed top-0 end-0 p-3">
+        
+        </div>
+  
+        <div className="row align-items-md-start  my-4">
+            <div className="w-100">
+                <div className="card mb-4 w-100">
+                    <div className="card-header py-3">
+                        <h5 className="mb-0">Summary</h5>
+                    </div>
+                    <div className="card-body">
+                        
+                        <div className="row">
+                            <div className="col-md-3">
                               
-                             </div> */}
-                               
-                             </div>
-   
-                             <div className='m-3 shadow p-3 bg-white rounded text-start ' style={{ fontFamily: 'Arial, sans-serif' }}>
-                                 <p className='fw-bold'>PICKUP :-  {startplaceInfo} </p>
-                                 <p className='fw-bold'>DROP :-  {destplaceInfo} </p>
-                               </div>
-                             
-                         </div>
-                         {
-                           cartype && cartype==='Suv' && (
-                             <div className="card h-50 w-75 mx-5 align-items-center justify-content-center" style={{width: '18rem',background:'white',cursor:'pointer'}}>
-                               <h6 className='mt-2 font-dark'>BOOKING FOR :-</h6>
-                             <img className="" style={{width: '270px'}} src="https://cdn-icons-png.flaticon.com/512/9559/9559752.png" alt="Card image cap" />
+                            </div>
+  
+                            <div className='m-3 shadow p-3 bg-white rounded text-start ' style={{ fontFamily: 'Arial, sans-serif' }}>
+                                <p className='fw-bold'>PICKUP :-  {startplaceInfo} </p>
+                                <p className='fw-bold'>DROP :-  {destplaceInfo} </p>
+                              </div>
+                            
+                        </div>
+                        {
+                          cartype && cartype==='Suv' && (
+                            <div className="card h-50 w-75 mx-5 align-items-center justify-content-center" style={{width: '18rem',background:'white',cursor:'pointer'}}>
+                              <h6 className='mt-2 font-dark'>BOOKING FOR :-</h6>
+                            <img className="" style={{width: '270px'}} src="https://cdn-icons-png.flaticon.com/512/9559/9559752.png" alt="Card image cap" />
+                            <div className="card-body text-center">
+                              <h5 className=" text-dark">Mini SUV</h5>
+                              <p className="">Spacious SUV for group travel</p>
+                              <p className=""> Enjoy, Ertiga, Innova</p>
+                              <p className="text-dark"> Amount :- <b className='text-dark'>INR {25*distance+1080 } + tax</b></p>
+                              {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
+                          </div>
+                        </div>
+                          )
+                        }
+  
+                        {
+                          cartype && cartype==='Sedan' && (
+                            <div className="card w-75 h-50 mx-5 align-items-center justify-content-center" style={{width: '18rem',background:'white',cursor:'pointer'}}>
+                              <h6 className='mt-2 font-dark'>BOOKING FOR :-</h6>
+                              <img className="px-3" style={{width: '270px'}} src="https://cdn-icons-png.flaticon.com/512/55/55283.png" alt="Card image cap" />
                              <div className="card-body text-center">
-                               <h5 className=" text-dark">Mini SUV</h5>
-                               <p className="">Spacious SUV for group travel</p>
-                               <p className=""> Enjoy, Ertiga, Innova</p>
-                               <p className="text-dark"> Amount :- <b className='text-dark'>INR {25*distance+1080 } + tax</b></p>
-                               {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
-                           </div>
-                         </div>
-                           )
-                         }
-   
-                         {
-                           cartype && cartype==='Sedan' && (
-                             <div className="card w-75 h-50 mx-5 align-items-center justify-content-center" style={{width: '18rem',background:'white',cursor:'pointer'}}>
-                               <h6 className='mt-2 font-dark'>BOOKING FOR :-</h6>
-                               <img className="px-3" style={{width: '270px'}} src="https://cdn-icons-png.flaticon.com/512/55/55283.png" alt="Card image cap" />
+                               <h5 className=" text-dark">Prime Sedan</h5>
+                               <p className="">Comfortable sedan with extra legroom</p>
+                               <p className="">Dzire, Etios, Sunny</p>
+                               <p className="text-dark"> Amount :- <b className='text-dark'>INR {19*distance+820 } + tax</b></p>
+                              {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
+                          </div>
+                        </div>
+                          )
+                        }
+  
+                        {
+                          cartype && cartype==='Mini' && (
+                            <div className="card w-75 h-50 mx-5 align-items-center justify-content-center" style={{width: '18rem',background:'white',cursor:'pointer'}}>
+                              <h6 className='mt-2 font-dark'>BOOKING FOR :-</h6>
+                              <img className="px-3" style={{width: '270px'}} src="https://cdn-icons-png.flaticon.com/512/55/55308.png" alt="Card image cap" />
                               <div className="card-body text-center">
-                                <h5 className=" text-dark">Prime Sedan</h5>
-                                <p className="">Comfortable sedan with extra legroom</p>
-                                <p className="">Dzire, Etios, Sunny</p>
-                                <p className="text-dark"> Amount :- <b className='text-dark'>INR {19*distance+820 } + tax</b></p>
-                               {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
-                           </div>
-                         </div>
-                           )
-                         }
-   
-                         {
-                           cartype && cartype==='Mini' && (
-                             <div className="card w-75 h-50 mx-5 align-items-center justify-content-center" style={{width: '18rem',background:'white',cursor:'pointer'}}>
-                               <h6 className='mt-2 font-dark'>BOOKING FOR :-</h6>
-                               <img className="px-3" style={{width: '270px'}} src="https://cdn-icons-png.flaticon.com/512/55/55308.png" alt="Card image cap" />
-                               <div className="card-body text-center">
-                                 <h5 className=" text-dark">Mini</h5>
-                                 <p className="">Affordable AC cabs with free wi-fi</p>
-                                 <p className="">Indica, Micra, Ritz</p>
-                                 <p className="text-dark"> Amount :- <b className='text-dark'>INR {18*distance+780 } + tax</b></p>
-                               {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
-                           </div>
-                         </div>
-                           )
-                         }
-   
-   
-                         {/* <div className='d-flex mt-3 text-start '>
-                         <div className="col-md-6 border-1 " style={{ fontFamily: 'Arial, sans-serif' }}>
-                                <h5>Vehicle Details :-</h5>
-                                 <p className="card-text font-weight-bold mt-3">Model : {availableVehicles?.model}</p>
-                                 <p className="card-text font-weight-bold">Type : {availableVehicles?.type}</p>
-                                 <p className="card-text font-weight-bold">Passengers: {availableVehicles?.passengers } seater </p>
-                             </div>
-   
-                             <div className="col-md-6" style={{ fontFamily: 'Arial, sans-serif' }}>
-                             <h5>Driver Details :-</h5>
-                                 <p className="card-text font-weight-bold mt-3">Name : {availableVehicles?.driver[0]?.name}</p>
-                                 <p className="card-text font-weight-bold">Email : {availableVehicles?.driver[0]?.email}</p>
-                                 <p className="card-text font-weight-bold">Mobile: {availableVehicles?.driver[0]?.phonenumber } </p>
-                             </div>
-                           </div> */}
-                       
-                     </div>
-                 </div>
-             </div>
-             <div className="col-md-12 w-100">
-                 <div className="card mb-4 p-3 border border-2 md-12 w-100 text-start" >
+                                <h5 className=" text-dark">Mini</h5>
+                                <p className="">Affordable AC cabs with free wi-fi</p>
+                                <p className="">Indica, Micra, Ritz</p>
+                                <p className="text-dark"> Amount :- <b className='text-dark'>INR {18*distance+780 } + tax</b></p>
+                              {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
+                          </div>
+                        </div>
+                          )
+                        }
+  
+  
+                        {/* <div className='d-flex mt-3 text-start '>
+                        <div className="col-md-6 border-1 " style={{ fontFamily: 'Arial, sans-serif' }}>
+                               <h5>Vehicle Details :-</h5>
+                                <p className="card-text font-weight-bold mt-3">Model : {availableVehicles?.model}</p>
+                                <p className="card-text font-weight-bold">Type : {availableVehicles?.type}</p>
+                                <p className="card-text font-weight-bold">Passengers: {availableVehicles?.passengers } seater </p>
+                            </div>
+  
+                            <div className="col-md-6" style={{ fontFamily: 'Arial, sans-serif' }}>
+                            <h5>Driver Details :-</h5>
+                                <p className="card-text font-weight-bold mt-3">Name : {availableVehicles?.driver[0]?.name}</p>
+                                <p className="card-text font-weight-bold">Email : {availableVehicles?.driver[0]?.email}</p>
+                                <p className="card-text font-weight-bold">Mobile: {availableVehicles?.driver[0]?.phonenumber } </p>
+                            </div>
+                          </div> */}
+                      
+                    </div>
+                </div>
+            </div>
+            <div className="col-md-12 w-100">
+                <div className="card mb-4 p-3 border border-2 md-12 w-100 text-start" >
+                  
+                <div className='d-flex Segoe UI'>
+                        <div className="col-md-6">
+                          <p className='fw-bold '>About {distance} kms</p>
+                               <h5>Fare Details :-</h5>
+                               {cartype && cartype==='Suv' && <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {1080}</p>}
+                               {cartype && cartype==='Sedan' && <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {820}</p>}
+                               {cartype && cartype==='Mini' && <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {780}</p>}
+                                {/* <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {basefare}</p> */}
+                                {cartype && cartype==='Suv' && <p className="card-text font-weight-bold">Fare for remaining km (25 per km) : INR {25*distance}</p>}
+                                {cartype && cartype==='Sedan' && <p className="card-text font-weight-bold">Fare for remaining km (19 per km) : INR {19*distance}</p>}
+                                {cartype && cartype==='Mini' && <p className="card-text font-weight-bold">Fare for remaining km (18 per km) : INR {18*distance}</p>}
+  
+                                {/* <p className="card-text font-weight-bold">Fare for remaining km ({remainingbasefare} per km) : INR {remainingfare}</p> */}
+                                <p className="card-text font-weight-bold">Taxes & Fees : INR {taxes}</p>
+                                <p className="card-text font-weight-bold">Estimated fare : INR {estimatedfare}</p>
+                            </div>
+  
+                            <div className="col-md-6">
+                            <h5>Pay by :-</h5>
+                              <div className="form-check">
+                                  <input 
+                                  className="form-check-input" 
+                                  type="radio" 
+                                  name='paymentMethod' 
+                                  id="payByCOD" 
+                                  value="COD"
+                                  checked={paymentMethod === 'COD'}
+                                  onChange={handlePaymentMethodChange} 
+                                  required/>
+                                  <label className="form-check-label font-weight-bold" >COD</label>
+                              </div>
+                              <div className="form-check">
+                                  <input 
+                                  className="form-check-input" 
+                                  type="radio" 
+                                  name='paymentMethod' 
+                                  id="payByWallet" 
+                                  value="Wallet" 
+                                  checked={paymentMethod === 'Wallet'}
+                                  onChange={handlePaymentMethodChange}
+                                  required/>
+                                  <label className="form-check-label font-weight-bold">Wallet</label>
+                                  <button className='border-0 ml-2 mt-2'>Add Money to Wallet</button>
+                              </div>
+                              <div className="form-check">
+                                  <input 
+                                  className="form-check-input" 
+                                  type="radio" 
+                                  name='paymentMethod' 
+                                  id="payByUPI" 
+                                  value="UPI" 
+                                  checked={paymentMethod === 'UPI'}
+                                  onChange={handlePaymentMethodChange}
+                                  required/>
+                                  <label className="form-check-label font-weight-bold">UPI</label>
+                              </div>
+                                <button onClick={handleSubmit} className="btn btn-primary btn-md ml-2 mt-2" disabled={isLoading}> {isLoading ? 'LOADING...' : 'CONTINUE'}</button>
+                            </div>
+                          </div>
                    
-                 <div className='d-flex Segoe UI'>
-                         <div className="col-md-6">
-                           <p className='fw-bold '>About {distance} kms</p>
-                                <h5>Fare Details :-</h5>
-                                {cartype && cartype==='Suv' && <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {1080}</p>}
-                                {cartype && cartype==='Sedan' && <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {820}</p>}
-                                {cartype && cartype==='Mini' && <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {780}</p>}
-                                 {/* <p className="card-text font-weight-bold mt-3">Base fare ({basekm}km) : INR {basefare}</p> */}
-                                 {cartype && cartype==='Suv' && <p className="card-text font-weight-bold">Fare for remaining km (25 per km) : INR {25*distance}</p>}
-                                 {cartype && cartype==='Sedan' && <p className="card-text font-weight-bold">Fare for remaining km (19 per km) : INR {19*distance}</p>}
-                                 {cartype && cartype==='Mini' && <p className="card-text font-weight-bold">Fare for remaining km (18 per km) : INR {18*distance}</p>}
-   
-                                 {/* <p className="card-text font-weight-bold">Fare for remaining km ({remainingbasefare} per km) : INR {remainingfare}</p> */}
-                                 <p className="card-text font-weight-bold">Taxes & Fees : INR {taxes}</p>
-                                 <p className="card-text font-weight-bold">Estimated fare : INR {estimatedfare}</p>
-                             </div>
-   
-                             <div className="col-md-6">
-                             <h5>Pay by :-</h5>
-                               <div className="form-check">
-                                   <input 
-                                   className="form-check-input" 
-                                   type="radio" 
-                                   name='paymentMethod' 
-                                   id="payByCOD" 
-                                   value="COD"
-                                   checked={paymentMethod === 'COD'}
-                                   onChange={handlePaymentMethodChange} 
-                                   required/>
-                                   <label className="form-check-label font-weight-bold" >COD</label>
-                               </div>
-                               <div className="form-check">
-                                   <input 
-                                   className="form-check-input" 
-                                   type="radio" 
-                                   name='paymentMethod' 
-                                   id="payByWallet" 
-                                   value="Wallet" 
-                                   checked={paymentMethod === 'Wallet'}
-                                   onChange={handlePaymentMethodChange}
-                                   required/>
-                                   <label className="form-check-label font-weight-bold">Wallet</label>
-                               </div>
-                               <div className="form-check">
-                                   <input 
-                                   className="form-check-input" 
-                                   type="radio" 
-                                   name='paymentMethod' 
-                                   id="payByUPI" 
-                                   value="UPI" 
-                                   checked={paymentMethod === 'UPI'}
-                                   onChange={handlePaymentMethodChange}
-                                   required/>
-                                   <label className="form-check-label font-weight-bold">UPI</label>
-                               </div>
-                                 <button onClick={handleSubmit} className="btn btn-primary btn-md ml-2 mt-2">CONTINUE</button>
-                             </div>
-                           </div>
-                    
-                 </div>
-             </div>
-         </div>
-         </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    
+  </section>
+  )}
      
-   </section>
   {/* )} */}
    
 </>

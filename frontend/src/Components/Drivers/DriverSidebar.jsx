@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './DriverSidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCab, faCar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faCab, faCar, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
 
 const DriverSidebar = () => {
 
+	const [ chat,setChat] = useState(false);
 	const { driverInfo } = useSelector((state)=>state.driver);
+	// console.log(driverInfo);
+
+	const socket = io('http://localhost:5000');
+
+	useEffect(() => {
+        socket.on('chat-message', (payload) => {
+            console.log("payload", payload)
+            setChat(true);
+        });
+    });
+
   return (
 			<nav id="sidebar" className="img" style={{height:'100%'}}>
 				<div className="p-4">
@@ -22,10 +35,15 @@ const DriverSidebar = () => {
 			  {driverInfo && driverInfo.isApproved===true ? (
 				<>
 			  <li>
-              <Link><FontAwesomeIcon icon={faCab} className="fa-lg me-3 fa-fw" /> Vehicle Info</Link>
+              <Link to='/drivervehicle'><FontAwesomeIcon icon={faCab} className="fa-lg me-3 fa-fw" /> Vehicle Info</Link>
 	          </li>
 	          <li>
               <Link to='/driverrides'><FontAwesomeIcon icon={faCar} className="fa-lg me-3 fa-fw" /> Rides</Link>
+	          </li>
+			  <li>
+              <Link to='/driverchat'><FontAwesomeIcon icon={faPen} className="fa-lg me-3 fa-fw" /> Chats
+			  {chat && <span className="notification-dot m-2 text-danger">1</span>}
+			  </Link>
 	          </li>
 			  </>
 			  ) : (

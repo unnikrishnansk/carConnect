@@ -1,5 +1,5 @@
 import express from 'express';
-import { authDriver, registerDriver, logoutDriver, getDriverProfile, editDriver, driverRides, acceptRides, reachedRide, paymentReceived} from '../controllers/driverController.js';
+import { authDriver, registerDriver, logoutDriver, getDriverProfile, editDriver, driverRides, acceptRides, reachedRide, paymentReceived, driverVehicle} from '../controllers/driverController.js';
 import { isDriverAuthenticated, isDriverBlocked } from '../middlewares/authMiddleware.js';
 import upload from '../config/files.js';
 
@@ -17,6 +17,7 @@ router.post('/driverridehistory', driverRides);
 router.get('/acceptride/:id', acceptRides);
 router.get('/reachedride/:id', reachedRide);
 router.get('/paymentreceived/:id', paymentReceived);
+router.get('/drivervehicle/:id', driverVehicle);
 
 
 export default router;

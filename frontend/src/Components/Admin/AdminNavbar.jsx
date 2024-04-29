@@ -33,7 +33,7 @@ const AdminNavbar = () => {
   <div className="container-fluid justify-content-between">
     {/* <!-- Navbar brand --> */}
     <div className=''>
-    <Link to='/adminhomepage' className='text-decoration-none '><p className="h5 m-2 fst-italic text-dark">CarConnect</p></Link>
+    <Link to='/adminhome' className='text-decoration-none '><p className="h5 m-2 fst-italic text-dark">CarConnect</p></Link>
     </div>
 
       {/* <!-- Left links --> */}

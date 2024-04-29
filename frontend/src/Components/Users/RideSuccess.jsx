@@ -20,7 +20,7 @@ const RideSuccess = () => {
      // Simulate data loading
    setTimeout(() => {
     setLoading(false);
-  }, 5000); // 5000 milliseconds = 5 seconds
+  }, 15000); // 5000 milliseconds = 5 seconds
 
   return (
     <>

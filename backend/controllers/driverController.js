@@ -5,6 +5,7 @@ import generateIds from "../utils/generateId.js";
 import generateOTP from "../utils/generateOtp.js";
 import nodemailer from 'nodemailer';
 import Ride from '../models/rideModel.js';
+import Vehicle from '../models/vehicleModel.js';
 // import { sendMail,transporter } from "../config/mail.js";
 
 // @desc    Auth driver/set token
@@ -261,4 +262,20 @@ const paymentReceived = async (req,res) => {
     }
 }
 
-export { authDriver, registerDriver, logoutDriver, getDriverProfile, editDriver, driverRides, acceptRides, reachedRide, paymentReceived };
+
+const driverVehicle = async ( req,res) => {
+    try {
+        // console.log(req);
+        const {id} = req.params;
+        const driver = await Driver.findOne({id}, {drivervehicle:1});
+        const vehicleid = driver.drivervehicle;
+        const vehicle = await Vehicle.findOne({id:vehicleid});
+        console.log(vehicle);
+        res.status(200).json(vehicle);
+    } catch (error) {
+        console.log(error);
+        throw new Error(error)
+    }
+}
+
+export { authDriver, registerDriver, logoutDriver, getDriverProfile, editDriver, driverRides, acceptRides, reachedRide, paymentReceived, driverVehicle };

@@ -11,7 +11,8 @@ import chatRoutes from './routes/chatRoute.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
-// import { Server } from 'http';
+import http from 'http';
+import { Server } from "socket.io";
 // import { Server as SocketIOServer } from 'socket.io';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 
@@ -22,6 +23,10 @@ connectDB();
 const app = express();
 
 // const http = new Server(app);
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: { origin: "*" }
+});
 
 app.use(cors({
     origin: 'http://127.0.0.1:3000',
@@ -34,6 +39,7 @@ app.use(cookieParser());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.use('/', express.static(path.join(__dirname,'uploads')));
+
 
 // const io = new SocketIOServer(http, {
 //     cors: {
@@ -67,6 +73,30 @@ app.get('/', (req, res) => {
 
 app.use(notFound);
 app.use(errorHandler);  
-app.listen(port, () => {
+
+const users= new Set();
+
+io.on('connection', (socket) => {
+    console.log('a user connected', socket.id);
+    users.add(socket.id)
+    io.emit('userCount',users.size);
+    socket.on('chat-message', (data) => {
+        const {msg,userInfo}=data
+        console.log('from:',socket.id+'  message:', msg+' userInfo:',userInfo);
+        io.emit('chat-message', { msg: msg, sender: userInfo, receiver: null });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+        users.delete(socket.id)
+        io.emit('userCount',users.size)
+    });
+});
+
+server.on("error", (err) => {
+    console.log("Error opening server:", err);
+});
+
+server.listen(port, () => {
     console.log(`[server] Listening on http://localhost:${port}`);
 })

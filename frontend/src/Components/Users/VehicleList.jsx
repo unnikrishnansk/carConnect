@@ -14,6 +14,7 @@ const VehicleList = () => {
 
     // const [searchText,setSearchText] = useState('');
     const [ vehiclelists,setVehiclelists ] = useState([]);
+    console.log(vehiclelists)
 
     const { startplaceInfo } = useSelector((state)=>state.place);
     const { destplaceInfo } = useSelector((state)=>state.place);
@@ -42,25 +43,13 @@ const VehicleList = () => {
         container: mapContainerRef.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [startplaceCord[0], startplaceCord[1]], // Source location
-        zoom: 8,
+        zoom: 12,
     });
 
     map.on('load', () => {
       setMapInitialized(true);
   });
 
-    // const directions = new mapboxgl.Directions({
-    //     accessToken: mapboxgl.accessToken,
-    //     unit: 'metric',
-    //     profile: 'mapbox/driving',
-    //     controls: { instructions: true },
-    // });
-
-    // map.addControl(directions, 'top-left');
-
-    // // Set source and destination
-    // directions.setOrigin(startplaceCord);
-    // directions.setDestination(destplaceCord);
 
     if (mapInitialized) {
       fetchRoute(startplaceCord, destplaceCord, mapboxToken)
@@ -91,8 +80,17 @@ const drawRoute = (route, map) => {
     return;
   }
 
+  // const markerIcon = document.createElement('div');
+  // markerIcon.className = 'marker-icon';
+  // markerElement.appendChild(markerIcon);
+
+  // const markerText = document.createElement('div');
+  // markerText.className = 'marker-text';
+  // markerText.textContent = 'Your Text Here'; // Replace 'Your Text Here' with the text you want to display
+  // markerElement.appendChild(markerText);
+
   // Add pointer for starting point
-  new mapboxgl.Marker()
+  new mapboxgl.Marker({color:'green'})
   .setLngLat(startplaceCord)
   .addTo(map);
 
@@ -133,6 +131,7 @@ new mapboxgl.Marker()
     useEffect(() => {
         const ListVehicle = async () =>{
             const res = await vehiclelist({startplaceInfo,destplaceInfo}).unwrap();
+            dispatch(setAvailableVehicleCredentials(res));
             setVehiclelists(res.vehicles);
         }
 
@@ -140,20 +139,6 @@ new mapboxgl.Marker()
     }, [vehiclelist])
 
     console.log(vehiclelists);
-
-    // const handleBookRide = (vehicleData) => {
-    //   console.log(vehicleData);
-    //   dispatch(setAvailableVehicleCredentials(vehicleData));
-    //   navigate('/payment');
-    // }
-
-    
-    // const filterData = (searchText,vehiclefilter) => {
-    //   const filterData = vehiclefilter.filter((vehicle) =>
-    //   vehicle?.type?.toLowerCase().includes(searchText.toLowerCase())
-    // );
-    // return filterData;
-    // }
 
     const handleCarType = (typeCar) => {
       if(typeCar==="Mini"){
@@ -179,55 +164,6 @@ new mapboxgl.Marker()
 
 <div className='d-flex'>
     <div ref={mapContainerRef} style={{ width: '50%', height: '500px' }} />
-   
-{/* 
-    <div class="d-flex">
-       
-            <input 
-              class="m-2 border border-2 w-25 " 
-              type="search" 
-              placeholder="Search by Type" 
-              id="search" 
-              value={searchText}
-              onChange={(e)=>{
-              setSearchText(e.target.value);
-            }} 
-            name="search"/>
-            <button 
-              class="btn btn-primary btn-sm m-2" 
-              type="submit"
-              onClick={()=>{
-                const data = filterData(searchText,vehiclelists);
-                setVehiclelists(data)}}
-            >
-              Search
-            </button>
-        
-      </div> */}
-{/* {vehiclelists.length===0 ? (
-  <>
-  <div className='m-3'>No vehicles found Near to your starting Location</div>
-  </>
-) : ( */}
-  {/* <div className='d-flex flex-wrap '> */}
-      {/* {vehiclelists && vehiclelists.map((eachVeh) => (
-        <div className="card m-2 p-2 d-flex " style={{width: "18rem"}}>
-        <img src={eachVeh?.vehicleURL==='' ? "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" : `http://localhost:5000/${eachVeh?.vehicleURL[0]}`} className="card-img-top" alt="vehicle" />
-          <div className="card-body">
-          <h6 className="card-title fw-bold ">Driver  : {eachVeh?.driver[0]?.name?.toUpperCase()}</h6>
-          <h6 className="card-title fw-bold ">Driver  : {eachVeh?.driver[0]?.phonenumber}</h6>
-          {/* <p className="card-text fw-bold ">Vehicle ID : {eachVeh.id}</p> */}
-           {/* <h6 className="card-title fw-bold ">Model  : {eachVeh.model.toUpperCase()}</h6>
-           <h6 className="card-title fw-bold ">Type : {eachVeh.type.toUpperCase()}</h6>
-           <h6 className="card-title fw-bold"> Max Passengers : {eachVeh.passengers}</h6>
-            
-          <button  className="btn btn-primary btn-md" onClick={()=>handleBookRide(eachVeh)}>Book</button>
-          <button  className="btn btn-primary btn-md ml-2">Chat</button>
-        </div> */}
-    {/* </div> */}
-      {/* ))}  */}
-
-
         <div className='w-50 h-100'>
       <h2 className='m-3'>Choose a car to continue :-</h2>
       <div className='w-100 d-flex mx-2 align-items-center justify-content-center h-100'>

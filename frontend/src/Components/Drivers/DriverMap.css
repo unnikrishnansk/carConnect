@@ -1,0 +1,8 @@
+.marker {
+    background-image: url('https://i.pinimg.com/736x/ce/f9/e0/cef9e08a492606c9603565af9aba60d2.jpg');
+    background-size: cover;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    cursor: pointer;
+}  

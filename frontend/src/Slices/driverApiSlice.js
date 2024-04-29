@@ -62,7 +62,13 @@ export const driversApiSlice = apiSlice.injectEndpoints({
               method: 'GET',
             }),
         }),
+        driverVehicle: builder.mutation({
+            query: (id) => ({
+              url: `${DRIVERS_URL}/drivervehicle/${id}`,
+              method: 'GET',
+            }),
+        }),
     })
 })
 
-export const {useDriverloginMutation, useDriverregisterMutation, useDriverlogoutMutation, useDriverprofileQuery, useEditDriverMutation, useGetDriverRideDetailMutation, useAcceptRideMutation, useReachedRideMutation, usePaymentReceivedMutation } = driversApiSlice;
+export const {useDriverloginMutation, useDriverregisterMutation, useDriverlogoutMutation, useDriverprofileQuery, useEditDriverMutation, useGetDriverRideDetailMutation, useAcceptRideMutation, useReachedRideMutation, usePaymentReceivedMutation, useDriverVehicleMutation } = driversApiSlice;

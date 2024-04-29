@@ -104,7 +104,7 @@ const Wallet = () => {
                key={wal.walletID}
                >
               <td>  {wal.walletID} </td>
-              <td>  {wal.walletDescription.toUpperCase()} </td>
+              <td>  {wal.walletDescription.toUpperCase() === "FUND ADDED" ? <p className='text-success'>Amount Credited</p> : <p className='text-danger'>Amount Debited</p>} </td>
               <td>  {formatTime(wal.walletTime)} </td>
               <td>  {wal.walletTransactionAmount} </td>
               <td className='text-success'>  {wal.walletStatus} </td>

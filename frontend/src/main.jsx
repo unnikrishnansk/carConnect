@@ -42,8 +42,11 @@ import Review from './Components/Users/Review.jsx';
 import About from './Components/Users/About.jsx';
 import Chat from './Components/Users/Chat.jsx';
 import socketIO from 'socket.io-client';
+import DriverChat from './Components/Drivers/DriverChat.jsx';
+import DriverVehicle from './Components/Drivers/DriverVehicle.jsx';
+import MapDestRender from './Components/Users/MapDestContainer.jsx';
 
-const socket = socketIO.connect('http://localhost:5000');
+// const socket = socketIO.connect('http://localhost:5000');
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,6 +64,7 @@ const router = createBrowserRouter(
       <Route path='' element={<PrivateRoute />} >
       <Route path='/profile' element={<Profile />} />
       <Route path='/map' element={<MapRender />} />
+      <Route path='/maps' element={<MapDestRender />} />
       <Route path='/edituserprofile' element={<EditUserProfile />} />
       <Route path='/vehiclelist' element={<VehicleList />} />
       <Route path='/payment' element={<Payment />} />
@@ -95,6 +99,8 @@ const router = createBrowserRouter(
       <Route path='/driverprofile' element={<DriverProfile />} />
       <Route path='/drivereditprofile' element={<EditDriverProfile />} />
       <Route path='/driverrides' element={<DriverRides />} />
+      <Route path='/driverchat' element={<DriverChat />} />
+      <Route path='/drivervehicle' element={<DriverVehicle />} />
       </Route>
     </Route>
 

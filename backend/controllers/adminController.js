@@ -450,8 +450,24 @@ const getAllrides = asyncHandler(async (req, res) => {
         }
     } catch (error) {
         res.status(404);
-            throw new Error("Some error occured.");
+        throw new Error("Some error occured.");
     }
 });
 
-export {authAdmin, logoutAdmin, addVehicle, getVehicle, createUser, editUser, getAllrides, getUsers, getDrivers, blockUser, getSingleVehicle, editVehicle, deleteVehicle, getVehicleImages, driverApproval, driverApprove, driverDecline};
+
+const getAdminhome = asyncHandler(async(req,res) => {
+
+    try {
+        const rides = await Ride.find();
+        const Numusers = await User.countDocuments();
+        const Numdrivers = await Driver.countDocuments();
+        const activeDrivers = await Driver.countDocuments({ isBlocked: false });
+        const Numvehicles = await Vehicle.countDocuments();
+        res.status(200).json({rides,Numusers,Numdrivers,activeDrivers,Numvehicles});
+    } catch (error) {
+        res.status(404);
+        throw new Error("Some error occured.");
+    }
+});
+
+export {authAdmin, logoutAdmin, addVehicle, getVehicle, createUser, editUser, getAllrides, getUsers, getDrivers, blockUser, getSingleVehicle, editVehicle, deleteVehicle, getVehicleImages, driverApproval, driverApprove, driverDecline, getAdminhome};

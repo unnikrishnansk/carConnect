@@ -34,3 +34,24 @@
     margin-left: 10px;
     font-size: 1.25rem;
 }
+
+.sent-message{
+    color: blue;
+    text-align: end;
+    margin-right: 50px;
+    padding: 2px;
+}
+
+.received-message{
+    color: red;
+    margin-left: 50px;
+}
+
+.messagediv{
+    /* border: 2px solid grey; */
+    width: 35px;
+    text-align: end;
+    margin-right: 50px;
+    height: 35px;
+    border-radius: 5px;
+}

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from 'mapbox-gl';
 import './MapContainer.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { useNavigate } from 'react-router-dom';
@@ -8,10 +8,10 @@ import { clearPlaceCredentials, setDistanceCredentials, setEndPlaceCords, setEnd
 import { faLocation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const MapRender = () => {
+const MapDestRender = () => {
 
-  const { destplaceInfo } = useSelector((state)=>state.place);
-  console.log("end", destplaceInfo);
+  const { startplaceInfo } = useSelector((state)=>state.place);
+  console.log("start", startplaceInfo);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoidW5uaWtyaXNobmFuODA3NSIsImEiOiJjbHRpZTlmcXAwYWpkMmtxd2JwOXJveXAyIn0.IOfM5FIc6EnW86dMN3-DyA';
 
@@ -24,12 +24,12 @@ const MapRender = () => {
   const [lat, setLat] = useState(12.95);
   const [zoom, setZoom] = useState(10);
   const [placeName, setPlaceName] = useState('');
-  const [endLocation, setEndLocation] = useState(null);
+  const [startLocation, setStartLocation] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(endLocation);
+  console.log(startLocation);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -49,7 +49,7 @@ const MapRender = () => {
     map.current.on('click', (e) => {
       const { lng, lat } = e.lngLat;
       console.log('Clicked at:', lng, lat);
-        setEndLocation({ lng, lat });
+        setStartLocation({ lng, lat });
       updateLocation(lng, lat);
     });
 
@@ -70,7 +70,7 @@ const MapRender = () => {
     geocoder.on('result', (e) => {
       const { lng, lat } = e.result.geometry.coordinates;
       updateLocation(lng, lat);
-        setEndLocation({ lng, lat });
+        setStartLocation({ lng, lat });
     });
     
   }, []);
@@ -86,8 +86,8 @@ const MapRender = () => {
       if (firstFeature) {
         const name = firstFeature.place_name;
         setPlaceName(name);
-          dispatch(setEndPlaceCredentials(name));
-          dispatch(setEndPlaceCords(data.query));
+          dispatch(setStartPlaceCredentials(name));
+          dispatch(setStartPlaceCords(data.query));
         navigate('/');
       }
     };
@@ -109,7 +109,7 @@ const MapRender = () => {
       navigator.geolocation.getCurrentPosition(position => {
         const { longitude, latitude } = position.coords;
         updateLocation(longitude, latitude);
-          setEndLocation({ lng, lat });
+          setStartLocation({ lng, lat });
       }, error => {
         console.error('Error getting current location:', error);
       });
@@ -134,7 +134,7 @@ const MapRender = () => {
       <div>
        
         <div className='d-flex'>
-        <div className="search-container mt-3 ml-3 " ref={searchInput } theme={theme} />
+        <div className="search-container mt-3 ml-3" ref={searchInput } theme={theme} />
        
         <button onClick={getCurrentLocation} className='btn btn-success btn-md m-3 get-current-location' > <FontAwesomeIcon icon={faLocation} className="fa-lg me-3 fa-fw" />Current Location</button>
         </div>
@@ -145,4 +145,4 @@ const MapRender = () => {
   );
 };
 
-export default MapRender;
+export default MapDestRender;

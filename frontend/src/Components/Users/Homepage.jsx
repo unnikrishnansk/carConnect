@@ -18,6 +18,7 @@ const Homepage = () => {
 
   const [distance,setDistance] = useState(null);
   const [duration,setDuration] = useState(null);
+  const [inputFieldClicked, setInputFieldClicked] = useState(null);
 
   const { userInfo } = useSelector((state)=>state.auth);
   const { startplaceInfo } = useSelector((state)=>state.place);
@@ -60,7 +61,12 @@ const Homepage = () => {
   }, [startplaceCord,destplaceCord])
 
   const HandleOpenMap = () =>{
+    // setInputFieldClicked(e.target.name);
     navigate('/map');
+  }
+
+  const HandleOpenMaps = () => {
+    navigate('/maps');
   }
 
   const HandleBookNow = async () =>{
@@ -88,8 +94,9 @@ const Homepage = () => {
                         className="h-100"
                         type="text" 
                         placeholder='Where from?'
-                        defaultValue={startplaceInfo === null ? "" : startplaceInfo}
-                        onClick={HandleOpenMap} 
+                        name='map1'
+                        defaultValue={startplaceInfo}
+                        onClick={HandleOpenMaps} 
                         required />
 										</div>
 									<div className="col-sm-6">
@@ -97,7 +104,8 @@ const Homepage = () => {
                       className="h-100" 
                       type="text" 
                       placeholder='Where to?'
-                      defaultValue={destplaceInfo === null ? "" : destplaceInfo}
+                      name='map2'
+                      defaultValue={destplaceInfo}
                       onClick={HandleOpenMap}  
                       required />
 										</div>
